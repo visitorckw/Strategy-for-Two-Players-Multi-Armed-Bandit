@@ -1,7 +1,8 @@
 import random
 
 class game:
-    def __init__(self, N = 100, gameRounds = 2000):
+    def __init__(self, N = 100, gameRounds = 2000, random_seed = 10):
+        random.seed(random_seed)
         self.N = N # 機器的數量
         self.machine = [] # 每一台機器當前得到糖果的機器
         self.gameRounds = gameRounds # 遊戲總共進行幾輪
@@ -36,6 +37,7 @@ class game:
                 if log:
                     print('agent2 choice', choice, 'get reward', reward, 'total score', str(self.agent1Reward) + ' vs ' + str(self.agent2Reward))
             self.round += 1
+        print(self.agent1Reward, ':', self.agent2Reward)
         if self.agent1Reward == self.agent2Reward:
             if log:
                 print('GAME TIED')
