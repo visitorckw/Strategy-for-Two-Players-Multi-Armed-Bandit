@@ -20,6 +20,10 @@ class game:
             if self.round % 2 == 0: # 輪到 agent1行動
                 # play(agent, total_round, current_round, my_total_rewards, my_history_choice, opp_history_choice, my_history_reward)
                 choice = agent1.play(1, self.N, self.gameRounds, self.round, self.agent1Reward, self.historyAgent1Choice, self.historyAgent2Choice, self.historyAgent1Reward) # agnet1 的play函數應該要return所選的機器編號
+                if 0 > choice or choice >= self.N:
+                    print("INVALID CHOICE BY AGENT1 !!!")
+                    print('choice = ', choice)
+                    exit(1)
                 reward = 1 if random.random() <= self.machine[choice] else 0
                 self.agent1Reward += reward
                 self.historyAgent1Choice.append(choice)
@@ -29,6 +33,10 @@ class game:
                     print('agent1 choice', choice, 'get reward', reward, 'total score', str(self.agent1Reward) + ' vs ' + str(self.agent2Reward))
             else:
                 choice = agent2.play(2, self.N, self.gameRounds, self.round, self.agent2Reward, self.historyAgent2Choice, self.historyAgent1Choice, self.historyAgent2Reward) # agnet1 的play函數應該要return所選的機器編號
+                if 0 > choice or choice >= self.N:
+                    print("INVALID CHOICE BY AGENT2 !!!")
+                    print('choice = ', choice)
+                    exit(1)
                 reward = 1 if random.random() <= self.machine[choice] else 0
                 self.agent2Reward += reward
                 self.historyAgent2Choice.append(choice)
