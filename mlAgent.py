@@ -10,7 +10,7 @@ class agent():
     def __init__(self, machine_numbers = 50, game_rounds = 1000):
         self.machine_numbers = machine_numbers
         self.game_rounds = game_rounds
-        self.model = DecisionTreeRegressor()
+        self.model = LinearRegression()
         self.train()
     def train(self, games = 100):
         for i in range(games):
