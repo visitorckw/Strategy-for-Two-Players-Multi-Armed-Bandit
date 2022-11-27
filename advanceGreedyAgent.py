@@ -3,34 +3,31 @@ class agent():
     def __init__(self):
         self.delta = 1e-9
     def likely(self, prob, agent, machine, my_history_choice, opp_history_choice, my_history_reward):
+        p = prob
         ans = 1
         for i in range(max(len(my_history_choice), len(opp_history_choice))):
             if agent == 1:
                 if i < len(my_history_choice):
-                    if my_history_choice[i] != machine:
-                        continue
-                    if my_history_reward[i] == 1:
-                        ans *= prob
-                    else:
-                        ans *= (1 - prob)
-                    prob *= 0.97
+                    if my_history_choice[i] == machine:
+                        if my_history_reward[i] == 1:
+                            ans *= p
+                        else:
+                            ans *= (1 - p)
+                        prob *= 0.97
                 if i < len(opp_history_choice):
-                    if opp_history_choice[i] != machine:
-                        continue
-                    prob *= 0.97
+                    if opp_history_choice[i] == machine:
+                        p *= 0.97
             else:
                 if i < len(opp_history_choice):
-                    if opp_history_choice[i] != machine:
-                        continue
-                    prob *= 0.97
+                    if opp_history_choice[i] == machine:
+                        p *= 0.97
                 if i < len(my_history_choice):
-                    if my_history_choice[i] != machine:
-                        continue
-                    if my_history_reward[i] == 1:
-                        ans *= prob
-                    else:
-                        ans *= (1 - prob)
-                    prob *= 0.97
+                    if my_history_choice[i] == machine:
+                        if my_history_reward[i] == 1:
+                            ans *= p
+                        else:
+                            ans *= (1 - p)
+                        p *= 0.97
         return ans
     def dfdx(self, x, agent, machine, my_history_choice, opp_history_choice, my_history_reward):
         y = self.likely(x, agent, machine, my_history_choice, opp_history_choice, my_history_reward)
@@ -72,17 +69,17 @@ class agent():
             for i in range(machine_numbers):
                 if i not in my_history_choice:
                     return i
-        push_times = [0 for i in range(machine_numbers)]
-        for i in range(len(my_history_choice)):
-            push_times[my_history_choice[i]] += 1
-        for i in range(len(opp_history_choice)):
-            push_times[opp_history_choice[i]] += 1
+        # push_times = [0 for i in range(machine_numbers)]
+        # for i in range(len(my_history_choice)):
+        #     push_times[my_history_choice[i]] += 1
+        # for i in range(len(opp_history_choice)):
+        #     push_times[opp_history_choice[i]] += 1
         expectProb = []
         for i in range(machine_numbers):
             # t = time.time()
             prob = self.linear_search(agent, i, my_history_choice, opp_history_choice, my_history_reward)
             # print(time.time() - t)
-            expectProb.append(prob * (0.97 ** push_times[i]))
+            expectProb.append(prob * (0.97 ** (my_push_distribute[i] + opp_push_distribute[i])))
         choice = -1
         maxProfit = -1
         for i in range(machine_numbers):

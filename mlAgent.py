@@ -7,16 +7,17 @@ from sklearn.tree import DecisionTreeRegressor
 from sklearn.svm import SVR
 
 class agent():
-    def __init__(self, machine_numbers = 50, game_rounds = 1000):
+    def __init__(self, machine_numbers = 50, game_rounds = 1000, model = LinearRegression(), train = True, training_games = 100):
         self.machine_numbers = machine_numbers
         self.game_rounds = game_rounds
-        self.model = LinearRegression()
-        self.train()
-    def train(self, games = 100):
-        for i in range(games):
-            print(i)
-            train_X = []
-            train_Y = []
+        self.model = model
+        if train:
+            self.train(training_games)
+    def train(self, training_games = 100):
+        train_X = []
+        train_Y = []
+        for i in range(training_games):
+            print('traning steps', str(i+1) + '/' + str(training_games))
             G = game.game(self.machine_numbers, self.game_rounds, i)
             round = 0
             while round < self.game_rounds:
@@ -45,7 +46,8 @@ class agent():
                 else:
                     G.agent2Play(choice, False)
                 round += 1
-            self.model.fit(train_X, train_Y)
+        self.model.fit(train_X, train_Y)
+        # print(self.model.score(train_X, train_Y))
     def play(self, agent, machine_numbers, total_round, current_round, my_total_rewards, my_history_choice, opp_history_choice, my_history_reward, my_push_distribute, opp_push_distribute, my_reward_distribute):
         if len(my_history_choice) < machine_numbers: # 尚未嘗試過所有機器
             for i in range(machine_numbers):
@@ -57,10 +59,16 @@ class agent():
         y = self.model.predict(X)
         maxProfit = -1
         choice = -1
-        for i in range(machine_numbers):
-            if y[i][0] > maxProfit:
-                maxProfit = y[i][0]
-                choice = i
+        if agent == 1 or agent == 2:
+            for i in range(machine_numbers):
+                if y[i][0] > maxProfit:
+                    maxProfit = y[i][0]
+                    choice = i
+        else:
+            for i in range(machine_numbers):
+                if y[i] > maxProfit:
+                    maxProfit = y[i]
+                    choice = i
         return choice
 
 if __name__ == '__main__':
