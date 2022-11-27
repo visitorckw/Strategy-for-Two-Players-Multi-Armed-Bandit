@@ -60,7 +60,7 @@ class agent():
             p = i / N
             like = self.likely(p, agent, machine, my_history_choice, opp_history_choice, my_history_reward)
             if like > maxLikely:
-                maxLikely - like
+                maxLikely = like
                 ans = p
         return ans
 
@@ -80,6 +80,7 @@ class agent():
             prob = self.linear_search(agent, i, my_history_choice, opp_history_choice, my_history_reward)
             # print(time.time() - t)
             expectProb.append(prob * (0.97 ** (my_push_distribute[i] + opp_push_distribute[i])))
+        # print('advance', expectProb)
         choice = -1
         maxProfit = -1
         for i in range(machine_numbers):

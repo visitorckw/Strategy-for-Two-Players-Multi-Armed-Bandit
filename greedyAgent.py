@@ -17,4 +17,5 @@ class agent():
             if avg_rewards[i] > maxProfit:
                 maxProfit = avg_rewards[i]
                 choice = i
+        # print('greedy', avg_rewards)
         return choice
