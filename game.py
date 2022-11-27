@@ -1,8 +1,9 @@
 import random
 
 class game:
-    def __init__(self, N = 100, gameRounds = 2000, random_seed = 10):
-        random.seed(random_seed)
+    def __init__(self, N = 100, gameRounds = 2000, random_seed = -1):
+        if random_seed != -1:
+            random.seed(random_seed)
         self.N = N # 機器的數量
         self.machine = [] # 每一台機器當前得到糖果的機器
         self.gameRounds = gameRounds # 遊戲總共進行幾輪
