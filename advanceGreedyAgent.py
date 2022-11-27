@@ -13,7 +13,7 @@ class agent():
                             ans *= p
                         else:
                             ans *= (1 - p)
-                        prob *= 0.97
+                        p *= 0.97
                 if i < len(opp_history_choice):
                     if opp_history_choice[i] == machine:
                         p *= 0.97
