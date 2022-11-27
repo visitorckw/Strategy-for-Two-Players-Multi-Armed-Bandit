@@ -3,7 +3,7 @@ import math
 class agent():
     def __init__(self, c = math.sqrt(2)):
         self.c = c
-    def play(self, agent, machine_numbers, total_round, current_round, my_total_rewards, my_history_choice, opp_history_choice, my_history_reward):
+    def play(self, agent, machine_numbers, total_round, current_round, my_total_rewards, my_history_choice, opp_history_choice, my_history_reward, my_push_distribute, opp_push_distribute, my_reward_distribute):
         if len(my_history_choice) < machine_numbers: # 尚未嘗試過所有機器
             for i in range(machine_numbers):
                 if i not in my_history_choice:
