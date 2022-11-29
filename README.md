@@ -1,5 +1,14 @@
 # ORA_project
-Final project of the operation research and application  
-遊戲規則的模板: game.py  
-載入遊戲規則以及兩個agent玩家: loader.py  
-各個玩家的演算法: *agent.py  
+## 1. Title  
+
+## 2. Background and Motivation
+    2.1 Motivation:  
+    2.2 Background:  
+    2.3 Problem Definition:    
+## 3. Methodology 
+## 4. Data Collection and Analysis Result 
+    4.1 Data Collection:  
+    4.2 Analysis:  
+    4.3 Result:  
+
+## 5. Conclusion  
