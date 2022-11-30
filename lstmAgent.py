@@ -109,8 +109,7 @@ class agent():
             for i in range(machine_numbers):
                 if i not in my_history_choice:
                     return i
-        maxProfit = -1
-        choice = -1
+        expectProfit = []
         for i in range(machine_numbers):
             my_history_choice = my_history_choice[-self.machine_numbers:]
             opp_history_choice = opp_history_choice[-self.machine_numbers:]
@@ -123,7 +122,12 @@ class agent():
                 x.append([my_choice, opp_choice, my_reward])
             y = self.model.predict([x])
             # print(y.shape)
-            if y[0][0] > maxProfit:
-                maxProfit = y[0][0]
+            expectProfit.append(y[0][0])
+        maxProfit = -1
+        choice = -1
+        for i in range(self.machine_numbers):
+            if expectProfit[i] > maxProfit:
+                maxProfit = expectProfit[i]
                 choice = i
+        print('lstm predict', expectProfit)
         return choice
