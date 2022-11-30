@@ -42,6 +42,10 @@ class agent():
             dL = self.dfdx(L, agent, machine, my_history_choice, opp_history_choice, my_history_reward)
             dR = self.dfdx(R, agent, machine, my_history_choice, opp_history_choice, my_history_reward)
             if dL * dR >= 0:
+                if dL > 0:
+                    L = R
+                else:
+                    R = L
                 break
             M = (L + R) / 2
             dM = self.dfdx(M, agent, machine, my_history_choice, opp_history_choice, my_history_reward)
@@ -79,7 +83,7 @@ class agent():
         expectProb = []
         for i in range(machine_numbers):
             # t = time.time()
-            prob = self.linear_search(agent, i, my_history_choice, opp_history_choice, my_history_reward)
+            prob = self.binary_search(agent, i, my_history_choice, opp_history_choice, my_history_reward)
             self.prob[i] = prob
             # print(time.time() - t)
             expectProb.append(prob * (0.97 ** (my_push_distribute[i] + opp_push_distribute[i])))
