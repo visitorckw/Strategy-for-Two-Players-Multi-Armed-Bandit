@@ -4,6 +4,7 @@ import greedyAgent
 import advanceGreedyAgent
 import ucbAgent
 import epsilonDeltaAgent
+import advanceUcbParallel
 import mlAgent
 import advanceUcb
 import sklearn
@@ -13,6 +14,6 @@ from sklearn.tree import DecisionTreeRegressor
 from sklearn.svm import SVR
 
 if __name__ == '__main__':
-    G = game.game(50, 1000)
+    G = game.game(50, 500)
     # G.run(mlAgent.agent(50, 1000, LinearRegression(), True, 100),mlAgent.agent(50, 1000, KNeighborsRegressor(), True, 100), False)
-    G.run(advanceGreedyAgent.agent(), greedyAgent.agent(), True)
+    G.run(advanceUcb.agent(), greedyAgent.agent(), False)
