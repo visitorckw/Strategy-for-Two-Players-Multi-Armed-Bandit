@@ -5,6 +5,7 @@ from sklearn.linear_model import LinearRegression, Ridge, Lasso, ElasticNet
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.svm import SVR
+from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
 
 class agent():
     def __init__(self, machine_numbers = 50, game_rounds = 1000, model = LinearRegression(), train = True, training_games = 100):
@@ -21,7 +22,7 @@ class agent():
             G = game.game(self.machine_numbers, self.game_rounds, i)
             round = 0
             while round < self.game_rounds:
-                if round < self.machine_numbers:
+                if round < self.machine_numbers * 2:
                     if round % 2 == 0: #agent1
                         G.agent1Play(round // 2, False)
                     else:
@@ -30,13 +31,13 @@ class agent():
                     continue
                 for j in range(self.machine_numbers):
                     if round % 2 == 0: #agent1
+                        train_X.append([G.agent1Push[j] / round * 2, G.agent2Push[j] / round * 2, G.agent1MachineReward[j] / G.agent1Push[j]])
                         reward = G.agent1Play(j, False)
-                        train_X.append([G.agent1Push[j], G.agent2Push[j], G.agent1MachineReward[j]])
                         train_Y.append([reward])
                         G.undoAgent1()
                     else:
+                        train_X.append([G.agent2Push[j] / round * 2, G.agent1Push[j] / round * 2, G.agent2MachineReward[j] / G.agent2Push[j]])
                         reward = G.agent2Play(j, False)
-                        train_X.append([G.agent2Push[j], G.agent1Push[j], G.agent2MachineReward[j]])
                         train_Y.append([reward])
                         G.undoAgent2()
 
@@ -55,7 +56,7 @@ class agent():
                     return i
         X = []
         for i in range(machine_numbers):
-            X.append([my_push_distribute[i], opp_push_distribute[i], my_reward_distribute[i]])
+            X.append([my_push_distribute[i] / current_round * 2, opp_push_distribute[i] / current_round * 2, my_reward_distribute[i] / my_push_distribute[i]])
         y = self.model.predict(X)
         maxProfit = -1
         choice = -1
