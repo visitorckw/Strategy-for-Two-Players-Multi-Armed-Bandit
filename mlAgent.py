@@ -1,6 +1,8 @@
 import game
 import random
 import sklearn
+import numpy as np
+import joblib
 from sklearn.linear_model import LinearRegression, Ridge, Lasso, ElasticNet
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.tree import DecisionTreeRegressor
@@ -8,11 +10,13 @@ from sklearn.svm import SVR
 from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
 
 class agent():
-    def __init__(self, machine_numbers = 50, game_rounds = 1000, model = LinearRegression(), train = True, training_games = 100):
+    def __init__(self, model = LinearRegression(), pretrain_model = None, training_games = 100, machine_numbers = 50, game_rounds = 1000, train = True):
         self.machine_numbers = machine_numbers
         self.game_rounds = game_rounds
         self.model = model
-        if train:
+        if pretrain_model:
+            self.model = joblib.load(pretrain_model)
+        if train and training_games:
             self.train(training_games)
     def train(self, training_games = 100):
         train_X = []
@@ -47,8 +51,13 @@ class agent():
                 else:
                     G.agent2Play(choice, False)
                 round += 1
+        train_Y = np.array(train_Y)
+        train_Y = train_Y.reshape((-1,))
+        print(train_Y.shape)
         self.model.fit(train_X, train_Y)
-        # print(self.model.score(train_X, train_Y))
+        joblib.dump(self.model, 'randomForest_model')
+        print('counting scores')
+        print(self.model.score(train_X, train_Y))
     def play(self, agent, machine_numbers, total_round, current_round, my_total_rewards, my_history_choice, opp_history_choice, my_history_reward, my_push_distribute, opp_push_distribute, my_reward_distribute):
         if len(my_history_choice) < machine_numbers: # 尚未嘗試過所有機器
             for i in range(machine_numbers):
@@ -60,7 +69,7 @@ class agent():
         y = self.model.predict(X)
         maxProfit = -1
         choice = -1
-        if agent == 1 or agent == 2:
+        if agent == -1:
             for i in range(machine_numbers):
                 if y[i][0] > maxProfit:
                     maxProfit = y[i][0]
