@@ -1,4 +1,12 @@
 import random
+import numpy as np
+def calLoss(act, pred):
+    act = np.array(act)
+    pred = np.array(pred)
+    diff = pred - act
+    differences_squared = diff ** 2
+    mean_diff = differences_squared.mean()
+    return mean_diff
 
 class game:
     def __init__(self, N = 100, gameRounds = 2000, random_seed = -1):
@@ -20,6 +28,7 @@ class game:
         self.agent2Push = [0 for i in range(N)] # Agnet1每一台機器玩過的次數
         for i in range(self.N):
             self.machine.append(random.random())
+        self.initProb = self.machine
     def agent1Play(self, choice, log):
         if 0 > choice or choice >= self.N:
             print("INVALID CHOICE BY AGENT1 !!!")
@@ -82,6 +91,7 @@ class game:
             else:
                 choice = agent2.play(2, self.N, self.gameRounds, self.round, self.agent2Reward, self.historyAgent2Choice, self.historyAgent1Choice, self.historyAgent2Reward, self.agent2Push, self.agent1Push, self.agent2MachineReward) # agnet1 的play函數應該要return所選的機器編號
                 self.agent2Play(choice, log)
+            print("Agent1 loss: ",calLoss(self.initProb , agent1.prob))
         print(self.agent1Reward, ':', self.agent2Reward)
         if self.agent1Reward == self.agent2Reward:
             if log:

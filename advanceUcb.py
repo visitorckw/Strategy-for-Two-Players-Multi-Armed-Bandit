@@ -66,6 +66,7 @@ class agent():
                 ans = p
         return ans
     def play(self, agent, machine_numbers, total_round, current_round, my_total_rewards, my_history_choice, opp_history_choice, my_history_reward, my_push_distribute, opp_push_distribute, my_reward_distribute):
+        self.prob = [ 0 for i in range(machine_numbers)]
         if len(my_history_choice) < machine_numbers: # 尚未嘗試過所有機器
             for i in range(machine_numbers):
                 if i not in my_history_choice:
@@ -80,6 +81,7 @@ class agent():
         choice = -1
         for i in range(machine_numbers):
             ev = self.linear_search(agent, i, my_history_choice, opp_history_choice, my_history_reward)
+            self.prob[i] = ev
             ucb = ev + self.c * math.sqrt(math.log(N) / n[i])
             if ucb > maxUCB:
                 maxUCB = ucb

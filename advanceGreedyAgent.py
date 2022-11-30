@@ -2,6 +2,7 @@ import time
 class agent():
     def __init__(self):
         self.delta = 1e-9
+        self.prob = []
     def likely(self, prob, agent, machine, my_history_choice, opp_history_choice, my_history_reward):
         p = prob
         ans = 1
@@ -65,6 +66,7 @@ class agent():
         return ans
 
     def play(self, agent, machine_numbers, total_round, current_round, my_total_rewards, my_history_choice, opp_history_choice, my_history_reward, my_push_distribute, opp_push_distribute, my_reward_distribute):
+        self.prob = [ 0 for i in range(machine_numbers)]
         if len(my_history_choice) < machine_numbers: # 尚未嘗試過所有機器
             for i in range(machine_numbers):
                 if i not in my_history_choice:
@@ -78,6 +80,7 @@ class agent():
         for i in range(machine_numbers):
             # t = time.time()
             prob = self.linear_search(agent, i, my_history_choice, opp_history_choice, my_history_reward)
+            self.prob[i] = prob
             # print(time.time() - t)
             expectProb.append(prob * (0.97 ** (my_push_distribute[i] + opp_push_distribute[i])))
         # print('advance', expectProb)

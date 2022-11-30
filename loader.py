@@ -18,5 +18,4 @@ from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
 if __name__ == '__main__':
     G = game.game(50, 1000)
     # G.run(mlAgent.agent(50, 1000, LinearRegression(), True, 100),mlAgent.agent(50, 1000, KNeighborsRegressor(), True, 100), False)
-    # G.run(advanceGreedyAgent.agent(), lstmAgent.agent('lstm_model.h5', 0), True)
-    G.run(ml_advanceUcbAgent.agent(), greedyAgent.agent(), True)
+    G.run(advanceGreedyAgent.agent(), greedyAgent.agent(), False)
