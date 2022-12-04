@@ -91,7 +91,8 @@ class game:
             else:
                 choice = agent2.play(2, self.N, self.gameRounds, self.round, self.agent2Reward, self.historyAgent2Choice, self.historyAgent1Choice, self.historyAgent2Reward, self.agent2Push, self.agent1Push, self.agent2MachineReward) # agnet1 的play函數應該要return所選的機器編號
                 self.agent2Play(choice, log)
-            print("Agent1 loss: ",calLoss(self.initProb , agent1.prob))
+            if agent1.prob!=None:
+                print("Agent1 loss: ",calLoss(self.initProb , agent1.prob))
         print(self.agent1Reward, ':', self.agent2Reward)
         if self.agent1Reward == self.agent2Reward:
             if log:

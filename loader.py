@@ -9,6 +9,7 @@ import advanceUcb
 import lstmAgent
 import ml_advanceUcbAgent
 import sklearn
+import thompsonagent
 from sklearn.linear_model import LinearRegression, Ridge, Lasso, ElasticNet
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.tree import DecisionTreeRegressor
@@ -18,4 +19,4 @@ from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
 if __name__ == '__main__':
     G = game.game(50, 1000)
     # G.run(mlAgent.agent(50, 1000, LinearRegression(), True, 100),mlAgent.agent(50, 1000, KNeighborsRegressor(), True, 100), False)
-    G.run(advanceGreedyAgent.agent(), greedyAgent.agent(), False)
+    G.run(thompsonagent.agent(), greedyAgent.agent(), False)
