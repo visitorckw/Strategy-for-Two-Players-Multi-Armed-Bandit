@@ -9,12 +9,15 @@ from sklearn.tree import DecisionTreeRegressor
 from sklearn.svm import SVR
 from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
 
+SVR()
 class agent():
     def __init__(self, model = LinearRegression(), pretrain_model = None, training_games = 100, machine_numbers = 50, game_rounds = 1000, train = True):
         self.machine_numbers = machine_numbers
         self.game_rounds = game_rounds
         self.model = model
+        self.prob = [ 0 for i in range(machine_numbers)]
         if pretrain_model:
+            print('Load pretrain model:', pretrain_model)
             self.model = joblib.load(pretrain_model)
         if train and training_games:
             self.train(training_games)
@@ -37,12 +40,12 @@ class agent():
                     if round % 2 == 0: #agent1
                         train_X.append([G.agent1Push[j] / round * 2, G.agent2Push[j] / round * 2, G.agent1MachineReward[j] / G.agent1Push[j]])
                         reward = G.agent1Play(j, False)
-                        train_Y.append([reward])
+                        train_Y.append([G.machine[j]])
                         G.undoAgent1()
                     else:
                         train_X.append([G.agent2Push[j] / round * 2, G.agent1Push[j] / round * 2, G.agent2MachineReward[j] / G.agent2Push[j]])
                         reward = G.agent2Play(j, False)
-                        train_Y.append([reward])
+                        train_Y.append([G.machine[j]])
                         G.undoAgent2()
 
                 choice = int(random.random() * self.machine_numbers)
@@ -53,9 +56,9 @@ class agent():
                 round += 1
         train_Y = np.array(train_Y)
         train_Y = train_Y.reshape((-1,))
-        print(train_Y.shape)
+        # print(train_Y.shape)
         self.model.fit(train_X, train_Y)
-        joblib.dump(self.model, 'randomForest_model')
+        joblib.dump(self.model, 'linearRegression_model')
         print('counting scores')
         print(self.model.score(train_X, train_Y))
     def play(self, agent, machine_numbers, total_round, current_round, my_total_rewards, my_history_choice, opp_history_choice, my_history_reward, my_push_distribute, opp_push_distribute, my_reward_distribute):
@@ -67,6 +70,10 @@ class agent():
         for i in range(machine_numbers):
             X.append([my_push_distribute[i] / current_round * 2, opp_push_distribute[i] / current_round * 2, my_reward_distribute[i] / my_push_distribute[i]])
         y = self.model.predict(X)
+        # print(y.shape)
+        for i in range(len(y)):
+            y[i] *= 0.97 ** (my_push_distribute[i] + opp_push_distribute[i])
+            self.prob[i] = y[i]
         maxProfit = -1
         choice = -1
         if agent == -1:
