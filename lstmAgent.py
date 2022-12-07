@@ -11,6 +11,7 @@ class agent():
     def __init__(self, pretrain_model = None, training_games = 100, machine_numbers = 50, game_rounds = 1000, train = True):
         self.machine_numbers = machine_numbers
         self.game_rounds = game_rounds
+        self.prob = [0 for i in range(machine_numbers)]
         
         # Initialising the RNN
         self.model = Sequential()
@@ -18,19 +19,19 @@ class agent():
         # Adding the first LSTM layer and some Dropout regularisation
         self.model.add(LSTM(units = 50, return_sequences = True, input_shape = (self.machine_numbers, 3)))
         # regressor.add(LSTM(units = 50, return_sequences = True))
-        self.model.add(Dropout(0.2))
+        # self.model.add(Dropout(0.2))
 
         # Adding a second LSTM layer and some Dropout regularisation
         self.model.add(LSTM(units = 50, return_sequences = True))
-        self.model.add(Dropout(0.2))
+        # self.model.add(Dropout(0.2))
 
         # Adding a third LSTM layer and some Dropout regularisation
         self.model.add(LSTM(units = 50, return_sequences = True))
-        self.model.add(Dropout(0.2))
+        # self.model.add(Dropout(0.2))
 
         # Adding a fourth LSTM layer and some Dropout regularisation
         self.model.add(LSTM(units = 50))
-        self.model.add(Dropout(0.2))
+        # self.model.add(Dropout(0.2))
 
         # Adding the output layer
         self.model.add(Dense(units = 1))
@@ -87,7 +88,7 @@ class agent():
                             x.append([my_choice, opp_choice, my_reward])
                         train_X.append(x)
                         reward = G.agent2Play(j, False)
-                        train_Y.append([reward])
+                        train_Y.append([G.machine[j]])
                         G.undoAgent2()
 
                 choice = int(random.random() * self.machine_numbers)
@@ -121,6 +122,8 @@ class agent():
                 my_reward = my_history_reward[k] if my_choice else 0
                 x.append([my_choice, opp_choice, my_reward])
             y = self.model.predict([x])
+            y[0][0] *= 0.97 ** (my_push_distribute[i] + opp_push_distribute[i])
+            self.prob[i] = y[0][0]
             # print(y.shape)
             expectProfit.append(y[0][0])
         maxProfit = -1

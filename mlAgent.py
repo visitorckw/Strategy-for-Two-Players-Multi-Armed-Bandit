@@ -11,11 +11,12 @@ from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
 
 SVR()
 class agent():
-    def __init__(self, model = LinearRegression(), pretrain_model = None, training_games = 100, machine_numbers = 50, game_rounds = 1000, train = True):
+    def __init__(self, model = LinearRegression(), pretrain_model = None, training_games = 100, machine_numbers = 50, game_rounds = 1000, train = True, save_model = 'linearRegression_model'):
         self.machine_numbers = machine_numbers
         self.game_rounds = game_rounds
         self.model = model
         self.prob = [ 0 for i in range(machine_numbers)]
+        self.save_model = save_model
         if pretrain_model:
             print('Load pretrain model:', pretrain_model)
             self.model = joblib.load(pretrain_model)
@@ -58,7 +59,8 @@ class agent():
         train_Y = train_Y.reshape((-1,))
         # print(train_Y.shape)
         self.model.fit(train_X, train_Y)
-        joblib.dump(self.model, 'linearRegression_model')
+        if self.save_model:
+            joblib.dump(self.model, self.save_model)
         print('counting scores')
         print(self.model.score(train_X, train_Y))
     def play(self, agent, machine_numbers, total_round, current_round, my_total_rewards, my_history_choice, opp_history_choice, my_history_reward, my_push_distribute, opp_push_distribute, my_reward_distribute):
