@@ -1,5 +1,7 @@
 import random
 import numpy as np
+import pandas as pd
+import os
 def calLoss(act, pred):
     act = np.array(act)
     pred = np.array(pred)
@@ -9,7 +11,7 @@ def calLoss(act, pred):
     return mean_diff
 
 class game:
-    def __init__(self, N = 100, gameRounds = 2000, random_seed = -1):
+    def __init__(self, N = 100, gameRounds = 2000, random_seed = -1, dataCollect = False, dataName = "TrainData"):
         if random_seed != -1:
             random.seed(random_seed)
         self.N = N # 機器的數量
@@ -26,6 +28,15 @@ class game:
         self.agent2MachineReward = [0 for i in range(N)] # Agnet2從每一台機器上的總獲利
         self.agent1Push = [0 for i in range(N)] # Agnet1每一台機器玩過的次數
         self.agent2Push = [0 for i in range(N)] # Agnet1每一台機器玩過的次數
+        self.agent1AdjustMachineReward = [0 for i in range(N)] 
+        self.agent2AdjustMachineReward = [0 for i in range(N)] 
+        self.agent1AdjustPush = [0 for i in range(N)] 
+        self.agent2AdjustPush = [0 for i in range(N)] 
+        self.dataCollect = dataCollect
+        self.dataName = dataName
+        self.collectQuantile = [0.25,0.5,0.75,0.9]
+        if(self.dataCollect):
+            self.data = pd.DataFrame()
         for i in range(self.N):
             self.machine.append(random.random())
         self.initProb = self.machine
@@ -41,6 +52,10 @@ class game:
         self.agent1MachineReward[choice] += reward
         self.agent1Push[choice] += 1
         self.machine[choice] *= 0.97
+        self.agent1AdjustMachineReward[choice]=self.agent1AdjustMachineReward[choice]*0.97+reward
+        self.agent2AdjustMachineReward[choice]=self.agent2AdjustMachineReward[choice]*0.97+reward
+        self.agent1AdjustPush[choice] = self.agent1AdjustPush[choice]*0.97+1
+        self.agent2AdjustPush[choice] = self.agent2AdjustPush[choice]*0.97+1
         self.round += 1
         if log:
             print('agent1 choice', choice, 'get reward', reward, 'total score', str(self.agent1Reward) + ' vs ' + str(self.agent2Reward))
@@ -57,6 +72,10 @@ class game:
         self.agent2MachineReward[choice] += reward
         self.agent2Push[choice] += 1
         self.machine[choice] *= 0.97
+        self.agent1AdjustMachineReward[choice]=self.agent1AdjustMachineReward[choice]*0.97+reward
+        self.agent2AdjustMachineReward[choice]=self.agent2AdjustMachineReward[choice]*0.97+reward
+        self.agent1AdjustPush[choice] = self.agent1AdjustPush[choice]*0.97+1
+        self.agent2AdjustPush[choice] = self.agent2AdjustPush[choice]*0.97+1
         self.round += 1
         if log:
             print('agent2 choice', choice, 'get reward', reward, 'total score', str(self.agent1Reward) + ' vs ' + str(self.agent2Reward))
@@ -93,7 +112,26 @@ class game:
                 self.agent2Play(choice, log)
             if agent1.prob!=None:
                 print("Agent1 loss: ",calLoss(self.initProb , agent1.prob))
+            if self.dataCollect:
+                for q in self.collectQuantile:
+                    if self.round == self.gameRounds*q:
+                        for i in range(self.N):
+                            data ={
+                                "originalProb":self.machine[i],
+                                "step":self.round,
+                                "chooseTime": self.agent1Push[i],
+                                "adjustedChoose": self.agent1AdjustPush[choice],
+                                "successTime": self.agent1MachineReward[i],
+                                "adjustedSuccessTime": self.agent1AdjustMachineReward[choice],
+                                "hitRate": self.agent1MachineReward[i]/self.agent1Push[i],
+                                "adjustedHitRate": self.agent1AdjustMachineReward[choice]/self.agent1AdjustPush[choice],
+                                "opponentChooseTime": self.agent2Push[i],
+                                "adjustedOpponentChooseTime": self.agent2AdjustPush[i],
+                                "opponentChooseTime": self.agent2Push[i],
+                            }
+                            self.data = self.data.append(data,ignore_index = True)
         print(self.agent1Reward, ':', self.agent2Reward)
+        self.data.to_csv(self.dataName,mode='a', header=not os.path.exists(self.dataName), index=False)
         if self.agent1Reward == self.agent2Reward:
             if log:
                 print('GAME TIED')

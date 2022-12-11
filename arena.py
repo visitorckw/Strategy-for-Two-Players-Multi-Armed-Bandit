@@ -28,7 +28,7 @@ if __name__ == '__main__':
         for j in range(len(agent)):
             if i == j:
                 continue
-            G = game.game(50, 1000)
+            G = game.game(50, 1000, dataCollect=True)
             res = G.run(agent[i], agent[j])
             result[i][j] = res
 
