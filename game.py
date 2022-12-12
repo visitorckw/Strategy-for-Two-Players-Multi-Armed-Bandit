@@ -2,6 +2,9 @@ import random
 import numpy as np
 import pandas as pd
 import os
+class Struct:
+    def __init__(self, **entries):
+        self.__dict__.update(entries)
 def calLoss(act, pred):
     act = np.array(act)
     pred = np.array(pred)
@@ -104,11 +107,43 @@ class game:
     def run(self, agent1, agent2, log = False):
         while self.round < self.gameRounds:
             if self.round % 2 == 0: # 輪到 agent1行動
+                data = {
+                    "agent": 1,
+                    "machine_numbers" : self.N,
+                    "total_round" : self.gameRounds,
+                    "current_round" : self.round,
+                    "my_total_rewards" : self.agent1Reward,
+                    "my_history_choice" : self.historyAgent1Choice,
+                    "opp_history_choice" : self.historyAgent2Choice, 
+                    "my_history_reward" : self.historyAgent1Reward,
+                    "my_push_distribute" : self.agent1Push,
+                    "opp_push_distribute" : self.agent2Push,
+                    "my_reward_distribute" : self.agent1MachineReward,
+                    "adjustedChoose": self.agent1AdjustPush,
+                    "opponentAdjustedChoose": self.agent2AdjustPush,
+                    "adjustedSuccessTime": self.agent1AdjustMachineReward,
+                }
                 # play(agent, machine_numbers, total_round, current_round, my_total_rewards, my_history_choice, opp_history_choice, my_history_reward, my_push_distribute, opp_push_distribute, my_reward_distribute)
-                choice = agent1.play(1, self.N, self.gameRounds, self.round, self.agent1Reward, self.historyAgent1Choice, self.historyAgent2Choice, self.historyAgent1Reward, self.agent1Push, self.agent2Push, self.agent1MachineReward) # agnet1 的play函數應該要return所選的機器編號
+                choice = agent1.play(Struct(**data)) # agnet1 的play函數應該要return所選的機器編號
                 self.agent1Play(choice, log)
             else:
-                choice = agent2.play(2, self.N, self.gameRounds, self.round, self.agent2Reward, self.historyAgent2Choice, self.historyAgent1Choice, self.historyAgent2Reward, self.agent2Push, self.agent1Push, self.agent2MachineReward) # agnet1 的play函數應該要return所選的機器編號
+                data = {
+                    "agent": 2,
+                    "machine_numbers" : self.N,
+                    "total_round" : self.gameRounds,
+                    "current_round" : self.round,
+                    "my_total_rewards" : self.agent2Reward,
+                    "my_history_choice" : self.historyAgent2Choice,
+                    "opp_history_choice" : self.historyAgent1Choice, 
+                    "my_history_reward" : self.historyAgent2Reward,
+                    "my_push_distribute" : self.agent2Push,
+                    "opp_push_distribute" : self.agent1Push,
+                    "my_reward_distribute" : self.agent2MachineReward,
+                    "adjustedChoose": self.agent2AdjustPush,
+                    "opponentAdjustedChoose": self.agent1AdjustPush,
+                    "adjustedSuccessTime": self.agent2AdjustMachineReward,
+                }
+                choice = agent2.play(Struct(**data)) # agnet2 的play函數應該要return所選的機器編號
                 self.agent2Play(choice, log)
             # if agent1.prob!=None:
             #     print("Agent1 loss: ",calLoss(self.initProb , agent1.prob))
@@ -120,14 +155,13 @@ class game:
                                 "originalProb":self.machine[i],
                                 "step":self.round,
                                 "chooseTime": self.agent1Push[i],
-                                "adjustedChoose": self.agent1AdjustPush[choice],
+                                "adjustedChoose": self.agent1AdjustPush[i],
                                 "successTime": self.agent1MachineReward[i],
-                                "adjustedSuccessTime": self.agent1AdjustMachineReward[choice],
+                                "adjustedSuccessTime": self.agent1AdjustMachineReward[i],
                                 "hitRate": self.agent1MachineReward[i]/self.agent1Push[i] if self.agent1Push[i]!=0 else 0,
-                                "adjustedHitRate": self.agent1AdjustMachineReward[choice]/self.agent1AdjustPush[choice] if self.agent1AdjustPush[choice]!=0 else 0,
+                                "adjustedHitRate": self.agent1AdjustMachineReward[i]/self.agent1AdjustPush[i] if self.agent1AdjustPush[i]!=0 else 0,
                                 "opponentChooseTime": self.agent2Push[i],
                                 "adjustedOpponentChooseTime": self.agent2AdjustPush[i],
-                                "opponentChooseTime": self.agent2Push[i],
                             }
                             self.data = self.data.append(data,ignore_index = True)
         print(self.agent1Reward, ':', self.agent2Reward)

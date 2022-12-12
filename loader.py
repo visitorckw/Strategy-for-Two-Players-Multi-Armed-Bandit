@@ -20,7 +20,7 @@ from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
 import lightBGMAgent
 if __name__ == '__main__':
     G = game.game(50, 1000,dataCollect=True)
-    G.run(greedyAgent.agent(), thompsonAgent.agent(), False)
+    G.run(lightBGMAgent.agent(), thompsonAgent.agent(), False)
     # win = 0
     # tie = 0
     # for i in range(100):
