@@ -165,7 +165,8 @@ class game:
                             }
                             self.data = self.data.append(data,ignore_index = True)
         print(self.agent1Reward, ':', self.agent2Reward)
-        self.data.to_csv(self.dataName,mode='a', header=not os.path.exists(self.dataName), index=False)
+        if self.dataCollect:
+            self.data.to_csv(self.dataName,mode='a', header=not os.path.exists(self.dataName), index=False)
         if self.agent1Reward == self.agent2Reward:
             if log:
                 print('GAME TIED')

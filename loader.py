@@ -19,8 +19,8 @@ from sklearn.svm import SVR
 from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
 import lightBGMAgent
 if __name__ == '__main__':
-    G = game.game(50, 1000,dataCollect=True)
-    G.run(lightBGMAgent.agent(), thompsonAgent.agent(), False)
+    G = game.game(50, 1000)
+    G.run(lightBGMAgent.agent(), greedyAgent.agent(), False)
     # win = 0
     # tie = 0
     # for i in range(100):

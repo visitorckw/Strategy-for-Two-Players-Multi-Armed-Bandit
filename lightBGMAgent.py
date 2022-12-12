@@ -32,18 +32,18 @@ class agent():
         X = []
         for i in range(machine_numbers):
             X.append([
-                len(my_history_choice),
-                my_push_distribute[i],
-                agent1AdjustPush[i],
-                my_reward_distribute[i],
-                my_reward_distribute[i]/my_push_distribute[i] if my_push_distribute[i]!=0 else 0,
-                agent1AdjustMachineReward[i]/agent1AdjustPush[i] if agent1AdjustPush[i]!=0 else 0,
-                opp_push_distribute,
-                agent2AdjustPush
+                np.array(len(my_history_choice)),
+                np.array(my_push_distribute[i]),
+                np.array(agent1AdjustPush[i]),
+                np.array(my_reward_distribute[i]),
+                np.array(agent1AdjustMachineReward[i]),
+                np.array(my_reward_distribute[i]/my_push_distribute[i] if my_push_distribute[i]!=0 else 0),
+                np.array(agent1AdjustMachineReward[i]/agent1AdjustPush[i] if agent1AdjustPush[i]!=0 else 0),
+                np.array(opp_push_distribute[i]),
+                np.array(agent2AdjustPush[i])
             ])
         X = np.array(X)
-        print(X.shape)
-        y = self.model.predict(X)
+        y = self.model.predict(X,num_iteration=self.model.best_iteration)
         # print(y.shape)
         index = 0
         max = y[index]
