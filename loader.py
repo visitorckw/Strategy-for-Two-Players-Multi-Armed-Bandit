@@ -1,18 +1,18 @@
 import game
-from agaent import advanceGreedyAgent
-from agaent import advanceThompsonAgent
-from agaent import advanceUcb
-from agaent import epsilonDeltaAgent
-from agaent import expSmoothAgent
-from agaent import greedyAgent
-from agaent import lightBGMAgent
-from agaent import ml_advanceUcbAgent
-from agaent import mlAgent
-from agaent import polyfitAgent
-from agaent import pureARAgent
-from agaent import randomAgent
-from agaent import thompsonAgent
-from agaent import ucbAgent
+from agent import advanceGreedyAgent
+from agent import advanceThompsonAgent
+from agent import advanceUcb
+from agent import epsilonDeltaAgent
+from agent import expSmoothAgent
+from agent import greedyAgent
+from agent import lightBGMAgent
+from agent import ml_advanceUcbAgent
+from agent import mlAgent
+from agent import polyfitAgent
+from agent import pureARAgent
+from agent import randomAgent
+from agent import thompsonAgent
+from agent import ucbAgent
 
 import sklearn
 from sklearn.linear_model import LinearRegression
