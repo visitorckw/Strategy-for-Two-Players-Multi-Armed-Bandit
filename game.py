@@ -152,7 +152,7 @@ class game:
                     if self.round == self.gameRounds*q:
                         for i in range(self.N):
                             data ={
-                                "originalProb":self.machine[i],
+                                "originalProb":self.initProb[i],
                                 "step":self.round,
                                 "chooseTime": self.agent1Push[i],
                                 "adjustedChoose": self.agent1AdjustPush[i],

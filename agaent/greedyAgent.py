@@ -34,3 +34,5 @@ class agent():
                 choice = i
         # print('greedy', avg_rewards)
         return choice
+
+

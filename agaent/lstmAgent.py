@@ -103,7 +103,7 @@ class agent():
         print(train_X.shape)
         print(train_Y.shape)
         self.model.fit(train_X, train_Y, epochs = 10, batch_size = 32)
-        self.model.save_weights('lstm_model.h5')
+        self.model.save_weights('../lstm_model.h5')
 
     def play(self, data):
         agent = data.agent

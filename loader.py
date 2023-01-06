@@ -1,25 +1,30 @@
 import game
-import randomAgent
-import greedyAgent
-import advanceGreedyAgent
-import ucbAgent
-import epsilonDeltaAgent
-import mlAgent
-import advanceUcb
-import lstmAgent
-import ml_advanceUcbAgent
+from agaent import advanceGreedyAgent
+from agaent import advanceThompsonAgent
+from agaent import advanceUcb
+from agaent import epsilonDeltaAgent
+from agaent import expSmoothAgent
+from agaent import greedyAgent
+from agaent import lightBGMAgent
+from agaent import lstmAgent
+from agaent import ml_advanceUcbAgent
+from agaent import mlAgent
+from agaent import polyfitAgent
+from agaent import pureARAgent
+from agaent import randomAgent
+from agaent import thompsonAgent
+from agaent import ucbAgent
+
 import sklearn
-import thompsonAgent
-import advanceThompsonAgent
-import polyfitAgent
 from sklearn.linear_model import LinearRegression, Ridge, Lasso, ElasticNet
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.svm import SVR
 from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
-import lightBGMAgent
+
 if __name__ == '__main__':
     G = game.game(50, 1000)
+    print(greedyAgent.agent().__module__)
     G.run(lightBGMAgent.agent(), greedyAgent.agent(), False)
     # win = 0
     # tie = 0
