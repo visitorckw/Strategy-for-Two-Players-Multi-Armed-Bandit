@@ -176,7 +176,7 @@ class game:
                                 curstate["adjustedOpponentChooseTime"],
                             ])
                             self.data = self.data.append(curstate,ignore_index = True)
-        print(self.agent1Reward, ':', self.agent2Reward)
+        print(agent1.__module__," vs ",agent2.__module__,"->",self.agent1Reward, ':', self.agent2Reward)
         if self.dataCollect and self.dataName!=None:
             self.data.to_csv(self.dataName,mode='a', header=not os.path.exists(self.dataName), index=False)
         if self.agent1Reward == self.agent2Reward:
