@@ -1,3 +1,4 @@
+import random
 from multiprocessing import Pool, Lock
 import copy
 import game
@@ -16,6 +17,7 @@ from agent import thompsonAgent
 from agent import ucbAgent
 from agent import ml_ucbAgent
 from agent import gradiantBanditAgent
+from agent import ml_ucbAgentStatic, lightBGMUCBAgent
 import sklearn
 import math
 from sklearn.linear_model import LinearRegression, Ridge, Lasso, ElasticNet
@@ -28,7 +30,6 @@ import pandas as pd
 import time
 import warnings
 warnings.filterwarnings("ignore")
-
 agent = [
     [advanceThompsonAgent, ()],
     [epsilonDeltaAgent, ()],
@@ -45,6 +46,8 @@ agent = [
     [ucbAgent, ()],
     [ml_ucbAgent, ()],
     [gradiantBanditAgent, ()],
+    [ml_ucbAgentStatic, ()],
+    [lightBGMUCBAgent, ()],
 ]
 
 
@@ -53,7 +56,11 @@ lock = [Lock() for i in range(len(agent))]
 
 def f(encode):
     x = encode // len(agent)
-    y = encode % len(agent)
+    y = len(agent)-1
+    if (random.randint(0, 1) == 0):
+        t = y
+        y = x
+        x = t
     if x == y:
         return
     agent1 = randomAgent.agent()
@@ -62,14 +69,14 @@ def f(encode):
     agent2Name = ''
     # lock[x].acquire()
     agent1 = copy.deepcopy(agent[x][0].agent(*agent[x][1]))
-    if(len(agent[x][1])!=0):
+    if (len(agent[x][1]) != 0):
         agent1Name = agent[x][0].__name__+agent[x][1][0].__class__.__name__
     else:
         agent1Name = agent[x][0].__name__
     # lock[x].release()
     # lock[y].acquire()
     agent2 = copy.deepcopy(agent[y][0].agent(*agent[y][1]))
-    if(len(agent[y][1])!=0):
+    if (len(agent[y][1]) != 0):
         agent2Name = agent[y][0].__name__+agent[y][1][0].__class__.__name__
     else:
         agent2Name = agent[y][0].__name__
@@ -84,6 +91,8 @@ def f(encode):
 
 
 if __name__ == '__main__':
-    while True:
+    i = 10
+    while i >= 0:
+        i-=1
         with Pool(8) as p:
             print(p.map(f, [i for i in range(len(agent) * len(agent))]))
