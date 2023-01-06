@@ -27,4 +27,4 @@ from sklearn.ensemble import RandomForestRegressor
 if __name__ == '__main__':
     G = game.game(50, 1000)
     # G.run( mlAgent.agent(DecisionTreeRegressor()), lightBGMAgent.agent(), False)
-    G.run(mlAgent.agent(RandomForestRegressor()), greedyAgent.agent(), True)
+    G.run(mlAgent.agent(SVR()), greedyAgent.agent(), True)
