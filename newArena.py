@@ -61,14 +61,14 @@ def f(encode):
     # lock[x].acquire()
     agent1 = copy.deepcopy(agent[x][0].agent(*agent[x][1]))
     if(len(agent[x][1])!=0):
-        agent1Name = agent[x][0].__name__+agent[x][1].__class__.__name__
+        agent1Name = agent[x][0].__name__+agent[x][1][0].__class__.__name__
     else:
         agent1Name = agent[x][0].__name__
     # lock[x].release()
     # lock[y].acquire()
     agent2 = copy.deepcopy(agent[y][0].agent(*agent[y][1]))
     if(len(agent[y][1])!=0):
-        agent2Name = agent[y][0].__name__+agent[y][1].__class__.__name__
+        agent2Name = agent[y][0].__name__+agent[y][1][0].__class__.__name__
     else:
         agent2Name = agent[y][0].__name__
     # lock[y].release()
