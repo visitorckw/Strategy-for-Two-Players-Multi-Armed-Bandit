@@ -154,7 +154,7 @@ class game:
                         self.curstate = []
                         for i in range(self.N):
                             curstate = {
-                                "originalProb":self.initProb[i],
+                                "originalProb":self.machine[i],
                                 "step":self.round,
                                 "chooseTime": self.agent1Push[i],
                                 "adjustedChoose": self.agent1AdjustPush[i],

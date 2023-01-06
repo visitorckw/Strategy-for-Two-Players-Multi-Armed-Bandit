@@ -26,6 +26,8 @@ from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
 import os
 import pandas as pd
 import time
+import warnings
+warnings.filterwarnings("ignore")
 
 agent = [
     [advanceThompsonAgent, ()],
@@ -72,7 +74,7 @@ def f(encode):
     else:
         agent2Name = agent[y][0].__name__
     # lock[y].release()
-    G = game.game(50, 1000)
+    G = game.game(50, 1000, dataCollect=True)
     res = G.run(agent1, agent2, False)
     folderName = 'result/'
     filename = agent1Name + '+' + agent2Name + '+' + \
