@@ -33,15 +33,11 @@ if __name__ == '__main__':
     if (os.path.isfile(fn)):
         data = pd.read_csv(fn)
     agent = [
-        advanceGreedyAgent.agent(),
         advanceThompsonAgent.agent(),
-        advanceUcb.agent(),
         epsilonDeltaAgent.agent(),
         expSmoothAgent.agent(),
         greedyAgent.agent(),
         lightBGMAgent.agent(),
-        # lstmAgent.agent(),
-        ml_advanceUcbAgent.agent(),
         mlAgent.agent(),
         polyfitAgent.agent(),
         pureARAgent.agent(),
