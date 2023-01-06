@@ -38,12 +38,13 @@ class game:
         self.dataCollect = dataCollect
         self.dataName = dataName
         self.collectQuantile = [0.25,0.5,0.75,0.9]
+        self.curstate = [[0 for i in range(9)] for j in range(50)]
         if(self.dataCollect):
             self.data = pd.DataFrame()
         for i in range(self.N):
             self.machine.append(random.random())
         self.initProb = self.machine
-    def agent1Play(self, choice, log):
+    def agent1Play(self, choice, log=False):
         if 0 > choice or choice >= self.N:
             print("INVALID CHOICE BY AGENT1 !!!")
             print('choice = ', choice)
@@ -62,8 +63,8 @@ class game:
         self.round += 1
         if log:
             print('agent1 choice', choice, 'get reward', reward, 'total score', str(self.agent1Reward) + ' vs ' + str(self.agent2Reward))
-        return reward
-    def agent2Play(self, choice, log):  
+        return reward, self.round==self.N-1, self.agent1Reward
+    def agent2Play(self, choice, log=False):  
         if 0 > choice or choice >= self.N:
             print("INVALID CHOICE BY AGENT2 !!!")
             print('choice = ', choice)
@@ -150,8 +151,9 @@ class game:
             if self.dataCollect:
                 for q in self.collectQuantile:
                     if self.round == self.gameRounds*q:
+                        self.curstate = []
                         for i in range(self.N):
-                            data ={
+                            curstate = {
                                 "originalProb":self.initProb[i],
                                 "step":self.round,
                                 "chooseTime": self.agent1Push[i],
@@ -163,9 +165,19 @@ class game:
                                 "opponentChooseTime": self.agent2Push[i],
                                 "adjustedOpponentChooseTime": self.agent2AdjustPush[i],
                             }
-                            self.data = self.data.append(data,ignore_index = True)
+                            self.curstate.append([
+                                curstate["step"],
+                                curstate["chooseTime"],
+                                curstate["adjustedChoose"],
+                                curstate["successTime"],
+                                curstate["adjustedSuccessTime"],
+                                curstate["hitRate"],
+                                curstate["adjustedHitRate"],
+                                curstate["adjustedOpponentChooseTime"],
+                            ])
+                            self.data = self.data.append(curstate,ignore_index = True)
         print(self.agent1Reward, ':', self.agent2Reward)
-        if self.dataCollect:
+        if self.dataCollect and self.dataName!=None:
             self.data.to_csv(self.dataName,mode='a', header=not os.path.exists(self.dataName), index=False)
         if self.agent1Reward == self.agent2Reward:
             if log:
