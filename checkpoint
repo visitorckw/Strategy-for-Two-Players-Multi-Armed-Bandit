@@ -1,2 +1,0 @@
-model_checkpoint_path: "lstm_model.hs"
-all_model_checkpoint_paths: "lstm_model.hs"
